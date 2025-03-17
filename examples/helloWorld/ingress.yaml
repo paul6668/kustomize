@@ -1,0 +1,26 @@
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/issuer: selfsigned-cluster-issuer
+    cert-manager.io/issuer-kind: ClusterIssuer
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  name: hello-world-ingress
+  namespace: hello-world
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: hello-world.devops.daocloud.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: gateway
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - hello-world.devops.daocloud.local
+    secretName: hello-world-ingress-tls
