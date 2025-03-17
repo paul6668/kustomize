@@ -16,9 +16,9 @@ spec:
       paths:
       - backend:
           service:
-            name: gateway
+            name: the-service
             port:
-              number: 80
+              number: 8666
         path: /
         pathType: Prefix
   tls:
