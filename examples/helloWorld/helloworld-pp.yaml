@@ -1,0 +1,44 @@
+apiVersion: policy.karmada.io/v1alpha1
+kind: PropagationPolicy
+metadata:
+  name: the-deployment-pp
+  namespace: devops
+spec:
+  conflictResolution: Abort
+  placement:
+    clusterAffinities:
+    - affinityName: default
+      clusterNames:
+      - devops
+      - k3s
+    clusterTolerations:
+    - effect: NoExecute
+      key: cluster.karmada.io/not-ready
+      operator: Exists
+      tolerationSeconds: 30
+    - effect: NoExecute
+      key: cluster.karmada.io/unreachable
+      operator: Exists
+      tolerationSeconds: 30
+    replicaScheduling:
+      replicaDivisionPreference: Weighted
+      replicaSchedulingType: Divided
+      weightPreference:
+        dynamicWeight: AvailableReplicas
+  preemption: Never
+  priority: 0
+  propagateDeps: true
+  resourceSelectors:
+  - apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    name: hello-world-ingress
+    namespace: devops
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: the-deployment
+    namespace: devops
+  - apiVersion: v1
+    kind: Service
+    name: the-service
+    namespace: devops
+  schedulerName: default-scheduler
