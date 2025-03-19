@@ -11,6 +11,7 @@ spec:
       clusterNames:
       - devops
       - k3s
+      - ocp
     clusterTolerations:
     - effect: NoExecute
       key: cluster.karmada.io/not-ready
